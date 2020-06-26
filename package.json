@@ -3,9 +3,9 @@
   "version": "",
   "description": "",
   "scripts": {
-    "dev": "nodemon src/index.ts --exec babel-node --extensions \".ts,.tsx\"",
+    "dev": "nodemon src/index.js --exec babel-node",
     "start": "node lib/index.js",
-    "build": "yarn clean && babel src --out-dir lib --copy-files --extensions \".ts,.tsx\"",
+    "build": "yarn clean && babel src --out-dir lib --copy-files",
     "test": "jest",
     "clean": "rimraf lib"
   },
@@ -22,8 +22,6 @@
     "@babel/node": "^7.8.7",
     "@babel/plugin-proposal-object-rest-spread": "^7.9.5",
     "@babel/preset-env": "^7.9.5",
-    "@babel/preset-typescript": "^7.9.0",
-    "@types/node": "^13.13.0",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^25.3.0",
     "eslint": "^6.8.0",
@@ -37,8 +35,7 @@
     "nodemon": "^2.0.3",
     "prettier": "^2.0.4",
     "pretty-quick": "^2.0.1",
-    "rimraf": "^3.0.2",
-    "typescript": "^3.8.3"
+    "rimraf": "^3.0.2"
   },
   "dependencies": {},
   "husky": {
