@@ -21,7 +21,7 @@ const credentials = JSON.parse(Buffer.from(process.env.SERVICE_ACCOUNT_JSON, 'ba
   const request = {
     config: {
       encoding: 'mp3',
-      sampleRateHertz: 44100,
+      sampleRateHertz: 16000,
       languageCode: 'zh-TW',
       enableAutomaticPunctuation: true,
     },
@@ -38,17 +38,25 @@ async function uploadToGCS({ storage, bucketName, gcsPath, videoUrl }) {
   if ((await storage.bucket(bucketName).file(gcsPath).exists())[0]) {
     return Promise.resolve();
   }
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const uploadStream = storage.bucket(bucketName).file(gcsPath).createWriteStream();
-    const ytVideoStream = ytdl(videoUrl, {
-      filter: (format) => format.container === 'mp4' && !format.hasVideo,
-    });
+    const { info, stream: ytVideoStream } = await ytdl
+      .getInfo(videoUrl, { quality: 'highestaudio' })
+      .then((data) => {
+        return {
+          info: data,
+          stream: ytdl.downloadFromInfo(data, {
+            quality: 'highestaudio',
+          }),
+        };
+      });
     ffmpeg(ytVideoStream)
       .setFfmpegPath(require('ffmpeg-static'))
+      .audioBitrate(info.formats[0].audioBitrate)
       .withAudioCodec('libmp3lame')
       .toFormat('mp3')
       .pipe(uploadStream)
-      .on('finish', resolve)
+      .on('finish', () => resolve({ info }))
       .on('error', reject);
   });
 }

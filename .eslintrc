@@ -8,6 +8,7 @@
     "node": true
   },
   "rules": {
+    "no-async-promise-executor": 0,
     "no-use-before-define": 0,
     "arrow-body-style": 0,
     "global-require": 0,
