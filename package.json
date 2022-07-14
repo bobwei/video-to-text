@@ -37,7 +37,15 @@
     "pretty-quick": "^2.0.1",
     "rimraf": "^3.0.2"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@google-cloud/speech": "^4.10.2",
+    "@google-cloud/storage": "^6.2.2",
+    "axios": "^0.27.2",
+    "dotenv": "^16.0.1",
+    "ffmpeg-static": "^5.0.2",
+    "fluent-ffmpeg": "^2.1.2",
+    "ytdl-core": "^4.11.0"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged"
