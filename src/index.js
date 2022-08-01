@@ -4,13 +4,14 @@ import { Storage } from '@google-cloud/storage';
 import ytdl from 'ytdl-core';
 import speech from '@google-cloud/speech';
 import ffmpeg from 'fluent-ffmpeg';
+import * as R from 'ramda';
 
 const credentials = JSON.parse(Buffer.from(process.env.SERVICE_ACCOUNT_JSON, 'base64'));
 
 (async () => {
   const bucketName = 'line-tracker-19d25.appspot.com';
-  const gcsPath = 'video-to-text/audios/sample.mp3';
-  const videoUrl = 'https://www.youtube.com/watch?v=R6ZGGXOFjl4';
+  const gcsPath = 'video-to-text/audios/OpHHmjahk4Y.mp3';
+  const videoUrl = 'https://www.youtube.com/watch?v=OpHHmjahk4Y';
   const storage = new Storage({ credentials });
 
   console.log('uploading...');
@@ -22,7 +23,7 @@ const credentials = JSON.parse(Buffer.from(process.env.SERVICE_ACCOUNT_JSON, 'ba
     config: {
       encoding: 'mp3',
       sampleRateHertz: 16000,
-      languageCode: 'zh-TW',
+      languageCode: 'ja-JP',
       enableAutomaticPunctuation: true,
     },
     audio: {
@@ -31,7 +32,13 @@ const credentials = JSON.parse(Buffer.from(process.env.SERVICE_ACCOUNT_JSON, 'ba
   };
   const [operation] = await speechClient.longRunningRecognize(request);
   const [response] = await operation.promise();
-  fs.writeFileSync('dist/output.json', JSON.stringify(response));
+  fs.writeFileSync('dist/response.json', JSON.stringify(response));
+  const result = R.pipe(
+    R.path(['results']),
+    R.map(R.path(['alternatives', '0', 'transcript'])),
+    R.join('\n'),
+  )(response);
+  fs.writeFileSync('dist/output.json', JSON.stringify(result));
 })();
 
 async function uploadToGCS({ storage, bucketName, gcsPath, videoUrl }) {

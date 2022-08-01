@@ -44,6 +44,7 @@
     "dotenv": "^16.0.1",
     "ffmpeg-static": "^5.0.2",
     "fluent-ffmpeg": "^2.1.2",
+    "ramda": "^0.28.0",
     "ytdl-core": "^4.11.0"
   },
   "husky": {
